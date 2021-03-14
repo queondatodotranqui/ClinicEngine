@@ -19,10 +19,16 @@ const addPatient = (name, address = 'Homeless', visit = 'Knee injury' , doctor =
 
    if(!duplicate){
         listPatients.push(new Patient(name, address, visit, doctor));
-
+        
         saveList(listPatients);
+        
+        return {
+            msg: 'patient loaded correctly'
+        }
    } else {
-       console.log('Patient already exists');
+       return {
+           error: 'patient already exists'
+       }
    }
 }
 
@@ -37,13 +43,22 @@ const readPatient = (name) =>{
     if(duplicate){
         return duplicate;
     } else {
-        console.log('Patient not found');
+        return {
+            error: 'patient not found'
+        }
     }
 }
 
 // list all the patients
 const listPatients = () =>{
-    return loadPatients();
+    const list = loadPatients();
+    if(list.length !== 0){
+        return list;
+    } else {
+        return {
+            error: 'there are no patients'
+        }
+    }
 }
 
 // remove patient from list

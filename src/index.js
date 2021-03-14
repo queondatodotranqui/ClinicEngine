@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const data = require('./data.js');
+const data = require('./patients.js');
 const app = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
@@ -11,12 +11,15 @@ app.get('/', (req, res)=>{
     res.render('index');
 })
 
-app.get('/data', (req, res)=>{
+app.get('/patient/add', (req, res)=>{
     if(req.query.name){
-        data.add(req.query.name, req.query.address, req.query.visit, req.query.doctor);
-        return res.send({
-            status: 'loaded'
-        })
+        let info = data.add(req.query.name, req.query.address, req.query.visit, req.query.doctor);
+        
+        if(info){
+            return res.send({
+                info
+            })
+        }
     } else {
         return res.send({
             error: 'name pls'
@@ -24,7 +27,7 @@ app.get('/data', (req, res)=>{
     }
 })
 
-app.get('/read', (req, res)=>{
+app.get('/patient/read', (req, res)=>{
     if(req.query.name){
         let info = data.read(req.query.name);
 
@@ -40,7 +43,7 @@ app.get('/read', (req, res)=>{
     }
 })
 
-app.get('/list', (req, res)=>{
+app.get('/patient/list', (req, res)=>{
     if(data.list()){
         return res.send({
             patients: data.list()
@@ -52,7 +55,7 @@ app.get('/list', (req, res)=>{
     }
 })
 
-app.get('/remove', (req, res)=>{
+app.get('/patient/remove', (req, res)=>{
     if(req.query.name){
         data.remove(req.query.name);
         return res.send({
